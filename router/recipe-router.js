@@ -1,29 +1,52 @@
 const express = require("express");
+
+const Recipes = require("../schemes/recipe-model");
+
 const router = express.Router();
 
-const {
-  getRecipes,
-  getShoppingList,
-  getInstructions
-} = require("../schemes/recipe-model");
-
-router.route("/").get(async (req, res) => {
-  /* GET /api/recipe */
-  const recipes = await getRecipes();
-  res.json(recipes);
+router.get("/", (request, response) => {
+  Recipes.getRecipes()
+    .then(recipe => {
+      response.status(200).json(recipe);
+    })
+    .catch(error => {
+      console.log("Error: ", error);
+      response.status(500).json({ message: "Failed to retrieve recipes" });
+    });
 });
 
-router.route("/:id/shoppingList").get(async ({ params: { id } }, res) => {
-  /* GET /api/recipe /id*/
-  const ingredients = await getShoppingList(id);
-
-  res.json(ingredients);
+router.get("/:id/shoppingList", (request, response) => {
+  const { id } = request.params;
+  Recipes.getShoppingList(id)
+    .then(list => {
+      if (list.length) {
+        response.status(200).json(list);
+      } else {
+        response.status(404).json({ message: "Shopping list not found" });
+      }
+    })
+    .catch(error => {
+      console.log("Error: ", error);
+      response
+        .status(500)
+        .json({ message: "Failed to retrieve shopping list " });
+    });
 });
 
-router.route("/:id/instructions").get(async ({ params: { id } }, res) => {
-  const instructions = await getInstructions(id);
-
-  res.json(instructions)
+router.get("/:id/instructions", (request, response) => {
+  const { id } = request.params;
+  Recipes.getInstructions(id)
+    .then(instructions => {
+      if (instructions.length) {
+        response.status(200).json(instructions);
+      } else {
+        response.status(404).json({ message: "Instructions not found" });
+      }
+    })
+    .catch(error => {
+      console.log("Error: ", error);
+      response.status(500).json({ message: "Failed to retrieve instructions" });
+    });
 });
 
-module.exports.router = router;
+module.exports = router;

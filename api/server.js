@@ -1,12 +1,14 @@
-const express = require('express');
+const express = require("express");
 
-const recipesRouter = require('../router/recipe-router');
-const ingredientsRouter = require('../router/ingredients-router');
+const RecipeRouter = require("../router/recipe-router");
 
 const server = express();
+
 server.use(express.json());
+server.use("/api/recipes", RecipeRouter);
 
-server.use('/api/recipes', recipesRouter);
-server.use('/api/ingredients', ingredientsRouter);
+server.get('/', (req, res, next) => {
+    res.json({ api: 'up'})
+})
 
-module.exports = server; 
+module.exports = server;
