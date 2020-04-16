@@ -3,7 +3,8 @@ const db = require("../data/dcConfig");
 module.exports = {
   getRecipes,
   getShoppingList,
-  getInstructions
+  getInstructions,
+  getRecipes
 };
 
 function getRecipes() {
