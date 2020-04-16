@@ -1,21 +1,17 @@
 const db = require("../data/dcConfig");
 
 module.exports = {
-  getRecipiesForIngredient,
+    getRecipiesForIngredient
 };
 
 function getRecipiesForIngredient(id) {
-  return db("ingredients")
+    return db("ingredients")
     .join("recipe_ingredients", {
-      "recipe_ingredients.ingredient_id": "ingredients.id",
-    })
+        "recipe_ingredients.ingredient_id": "ingredients.id"
+      })
     .join("recipes", {
-      "recipes.id": "recipe_ingredients.recipe_id",
-    })
-    .where({ "ingredients.id": id })
-    .select("ingredients.ingredient_name")
-    .select("recipes.id")
-    .as("recipe_id")
-    .select("recipes.name")
-    .as("recipe");
-}
+        "recipes.id": "recipe_ingredients.recipe_id"
+      })
+    .where({ "ingredients.id": id })  
+    .select("ingredients.ingredient_name", "recipes.id as recipeID", "recipes.name as recipe_name")
+  }
